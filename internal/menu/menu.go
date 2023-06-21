@@ -12,15 +12,17 @@ import (
 	"os"
 	"strconv"
 	"time"
+	"tracker/internal/activities"
+	"tracker/internal/language"
 )
 
 // Structs
 type Menu struct {
-	tracker *ActivityTracker
+	tracker *activities.ActivityTracker
 	scanner *bufio.Scanner
 }
 
-func NewMenu(tracker *ActivityTracker) *Menu {
+func NewMenu(tracker *activities.ActivityTracker) *Menu {
 	return &Menu{
 		tracker: tracker,
 		scanner: bufio.NewScanner(os.Stdin),
@@ -42,7 +44,7 @@ func (m *Menu) displayActivityTypes() {
 
 func (menu *Menu) handleAddActivity() {
 	// Extract Languages
-	languages := getLanguages()
+	languages := language.GetLanguages()
 
 	fmt.Print("Enter the language: ")
 	language := menu.readLine()
@@ -55,7 +57,7 @@ func (menu *Menu) handleAddActivity() {
 		fmt.Println("Language Exists")
 	} else {
 		fmt.Println("Adding Language")
-		addLanguage(language)
+		language.AddLanguage()
 	}
 
 	fmt.Print("Enter the time spent (in minutes): ")
@@ -66,17 +68,17 @@ func (menu *Menu) handleAddActivity() {
 		return
 	}
 
-	fmt.Print("Enter Activity Type")
-	activityTypeStr := menu.runActivityType()
-	activityType, err := strconv.Atoi(activityTypeStr)
-	if err != nil {
-		fmt.Println("Invalid activity type.")
-		return
-	}
+	// fmt.Print("Enter Activity Type")
+	// activityTypeStr := menu.runActivityType()
+	// activityType, err := strconv.Atoi(activityTypeStr)
+	// if err != nil {
+	// 	fmt.Println("Invalid activity type.")
+	// 	return
+	// }
 
 	// Add Activity
-	newActivity := Activity{
-		Type:      activityType,
+	newActivity := activities.Activity{
+		// Type:      activityType,
 		Date:      time.Now(),
 		Language:  language,
 		TimeSpent: time.Duration(timeSpent) * time.Minute,
@@ -116,13 +118,13 @@ func (m *Menu) getActivityType() {
 
 		switch choice {
 		case "1":
-			return "Listening"
+			"Listening"
 		case "2":
-			return "Watching"
+			"Watching"
 		case "3":
-			return "Talking"
+			"Talking"
 		default:
-			return ""
+			return
 		}
 	}
 

@@ -20,7 +20,7 @@ type Language struct {
 var filePath = "./data/languages.json"
 
 // Functions
-func getLanguages() []Language {
+func GetLanguages() []Language {
 	// Read the JSON file
 	data, err := ioutil.ReadFile(filePath)
 	if err != nil {
@@ -44,7 +44,7 @@ func getLanguages() []Language {
 	return languages
 }
 
-func addLanguage(language string) {
+func AddLanguage(language string) {
 	// Read the JSON file
 	data, err := ioutil.ReadFile(filePath)
 	if err != nil {
