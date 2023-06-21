@@ -26,11 +26,38 @@ type ActivityTracker struct {
 }
 
 // Constants
-var statsFile = "./data/stats.json"
+var statsFile = "./stats.json"
 
 // Helper Functions
+func createFile(fileName string) {
+	// Create an empty JSON object
+	data := make(map[string]interface{})
+
+	// Convert the JSON object to bytes
+	bytes, err := json.MarshalIndent(data, "", "  ")
+	if err != nil {
+		fmt.Println("Error marshaling JSON:", err)
+		return
+	}
+
+	// Write the bytes to the file
+	err = ioutil.WriteFile(fileName, bytes, 0644)
+	if err != nil {
+		fmt.Println("Error writing file:", err)
+		return
+	}
+
+	fmt.Println("File created:", fileName)
+}
+
 func loadActivities() []Activity {
 	var activities []Activity
+
+	// Check if Statsfile Exists
+	if _, err := os.Stat(statsFile); os.IsNotExist(err) {
+		fmt.Println("File does not exist:", statsFile)
+		createFile(statsFile)
+	}
 
 	// Load Previous Activity Stats
 	data, err := ioutil.ReadFile(statsFile)
@@ -38,6 +65,7 @@ func loadActivities() []Activity {
 		log.Fatalf("Failed to read file: %v", err)
 	}
 
+	// Load JSON
 	err = json.Unmarshal(data, &activities)
 	if err != nil {
 		log.Fatalf("Failed to unmarshal JSON: %v", err)

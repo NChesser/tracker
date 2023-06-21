@@ -17,7 +17,7 @@ type Language struct {
 }
 
 // Variables
-var filePath = "./data/languages.json"
+var filePath = "./languages.json"
 
 // Functions
 func GetLanguages() []Language {

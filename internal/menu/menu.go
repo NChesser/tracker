@@ -42,22 +42,35 @@ func (m *Menu) displayActivityTypes() {
 	fmt.Println("3. Talking")
 }
 
+func languageExists(l string, ls []language.Language) bool {
+	newLanguage := language.Language{
+		Name: l,
+	}
+
+	for _, item := range ls {
+		if item == newLanguage {
+			return true
+		}
+	}
+	return false
+}
+
 func (menu *Menu) handleAddActivity() {
 	// Extract Languages
 	languages := language.GetLanguages()
 
 	fmt.Print("Enter the language: ")
-	language := menu.readLine()
+	newLanguage := menu.readLine()
 
 	// Add Language to JSON file if not there
-	languageStatus := languageExists(language, languages)
+	languageStatus := languageExists(newLanguage, languages)
 	fmt.Println("Language Status", languageStatus)
 
 	if !languageStatus {
 		fmt.Println("Language Exists")
 	} else {
 		fmt.Println("Adding Language")
-		language.AddLanguage()
+		language.AddLanguage(newLanguage)
 	}
 
 	fmt.Print("Enter the time spent (in minutes): ")
@@ -80,7 +93,7 @@ func (menu *Menu) handleAddActivity() {
 	newActivity := activities.Activity{
 		// Type:      activityType,
 		Date:      time.Now(),
-		Language:  language,
+		Language:  newLanguage,
 		TimeSpent: time.Duration(timeSpent) * time.Minute,
 	}
 	menu.tracker.AddActivity(newActivity)
@@ -110,7 +123,7 @@ func (m *Menu) readLine() string {
 	return m.scanner.Text()
 }
 
-func (m *Menu) getActivityType() {
+func (m *Menu) getActivityType() string {
 	for {
 		m.displayActivityTypes()
 		fmt.Print("Enter activity type: ")
@@ -118,13 +131,13 @@ func (m *Menu) getActivityType() {
 
 		switch choice {
 		case "1":
-			"Listening"
+			return "Listening"
 		case "2":
-			"Watching"
+			return "Watching"
 		case "3":
-			"Talking"
+			return "Talking"
 		default:
-			return
+			return ""
 		}
 	}
 
